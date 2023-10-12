@@ -59,6 +59,9 @@ class MyASGEGame(pyasge.ASGEGame):
         self.fish = pyasge.Sprite()
         self.initFish()
 
+        # Fish Speeds + Timer Space
+        self.speed = 350
+
 
     def initBackground(self) -> bool:
         if self.data.background.loadTexture("Data/images/background.png"):
@@ -152,7 +155,9 @@ class MyASGEGame(pyasge.ASGEGame):
             pass
         else:
             # update the game here
-            pass
+            self.fish.x += self.speed * game_time.fixed_timestep
+            if self.fish.x > self.data.game_res[0]:
+                self.fish.x = -self.fish.width
 
     def render(self, game_time: pyasge.GameTime) -> None:
         """
