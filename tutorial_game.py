@@ -4,7 +4,11 @@ from gamedata import GameData
 
 
 def isInside(sprite, mouse_x, mouse_y) -> bool:
-    pass
+    bounds = sprite.getWorldBounds()
+    if bounds.v1.x < mouse_x < bounds.v2.x and bounds.v1.y < mouse_y < bounds.v3.y:
+        return True
+
+    return False
 
 
 class MyASGEGame(pyasge.ASGEGame):
@@ -33,6 +37,7 @@ class MyASGEGame(pyasge.ASGEGame):
         self.mouse_id = self.data.inputs.addCallback(pyasge.EventType.E_MOUSE_CLICK, self.clickHandler)
 
         # set the game to the menu
+        self.game_state = 0
         self.menu = True
         self.play_option = None
         self.exit_option = None
@@ -46,13 +51,14 @@ class MyASGEGame(pyasge.ASGEGame):
         self.menu_text = None
         self.initMenu()
 
-        #
+        # Scoreboard Shenanigans
         self.scoreboard = None
         self.initScoreboard()
 
         # This is a comment
         self.fish = pyasge.Sprite()
         self.initFish()
+
 
     def initBackground(self) -> bool:
         if self.data.background.loadTexture("Data/images/background.png"):
@@ -62,7 +68,14 @@ class MyASGEGame(pyasge.ASGEGame):
             return False
 
     def initFish(self) -> bool:
-        pass
+        if self.fish.loadTexture("data/images/kenney_fishpack/fishtile_072.png"):
+            self.fish.z_order = 1
+            self.fish.scale = 1
+            self.fish.x = 300
+            self.fish.y = 300
+            return True
+
+        return False
 
     def initScoreboard(self) -> None:
         pass
@@ -113,12 +126,17 @@ class MyASGEGame(pyasge.ASGEGame):
                 if self.menu_option == 0:
                     self.menu = False
                     self.game_state = 1
+                    self.spawn()
                 else:
                     self.signal_exit()
 
 
     def spawn(self) -> None:
-        pass
+        # Fish 1
+        x = random.randint(0, self.data.game_res[0] - self.fish.width)
+        y = random.randint(0, self.data.game_res[1] - self.fish.height)
+        self.fish.x = x
+        self.fish.y = y
 
     def update(self, game_time: pyasge.GameTime) -> None:
 
@@ -139,14 +157,15 @@ class MyASGEGame(pyasge.ASGEGame):
 
         self.data.renderer.render(self.data.background)
 
-        if self.menu:
-            # render the menu here
+        if self.game_state == 0:
+            # Menu Content
             self.data.renderer.render(self.menu_text)
             self.data.renderer.render(self.play_option)
             self.data.renderer.render(self.exit_option)
-        else:
-            # render the game here
-            pass
+
+        elif self.game_state == 1:
+            # Main Game Content
+            self.data.renderer.render(self.fish)
 
 
 def main():
