@@ -42,6 +42,9 @@ class MyASGEGame(pyasge.ASGEGame):
         self.play_option = None
         self.exit_option = None
         self.menu_option = 0
+        self.quit_game = None
+        self.play_option = None
+        self.replay_option = 0
 
         # This is a comment
         self.data.background = pyasge.Sprite()
@@ -174,6 +177,31 @@ class MyASGEGame(pyasge.ASGEGame):
                     self.game_state = 1
                     self.spawn()
                     self.timerCountdown = 15
+                else:
+                    self.signal_exit()
+
+            # Game Over
+            if event.key == pyasge.KEYS.KEY_RIGHT or event.key == pyasge.KEYS.KEY_LEFT:
+                self.replay_option = 1 - self.replay_option
+                if self.replay_option == 0:
+                    self.play_again.string = ">Replay"
+                    self.play_again.colour = pyasge.COLOURS.DARKBLUE
+                    self.quit_game.string = "Exit"
+                    self.quit_game.colour = pyasge.COLOURS.LIGHTSLATEGRAY
+
+                elif self.replay_option == 1:
+                    self.play_again.string = "Replay"
+                    self.play_again.colour = pyasge.COLOURS.LIGHTSLATEGRAY
+                    self.quit_game.string = ">Exit"
+                    self.quit_game.colour = pyasge.COLOURS.DARKBLUE
+
+            if event.key == pyasge.KEYS.KEY_ENTER:
+                if self.replay_option == 0:
+                    self.menu = False
+                    self.game_state = 1
+                    self.timerCountdown = 15
+                    self.data.score = 0
+                    self.scoreboard.string = str(self.data.score).zfill(6)
                 else:
                     self.signal_exit()
 
