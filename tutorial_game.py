@@ -20,7 +20,7 @@ class MyASGEGame(pyasge.ASGEGame):
             settings (pyasge.GameSettings): The game settings
         """
         pyasge.ASGEGame.__init__(self, settings)
-        self.renderer.setClearColour(pyasge.COLOURS.CORNFLOWER)
+        self.renderer.setClearColour(pyasge.COLOURS.BLACK)
 
         # create a game data object, we can store all shared game content here
         self.data = GameData()
@@ -55,7 +55,11 @@ class MyASGEGame(pyasge.ASGEGame):
         self.initFish()
 
     def initBackground(self) -> bool:
-        pass
+        if self.data.background.loadTexture("Data/images/background.png"):
+            self.data.background.z_order = -100
+            return True
+        else:
+            return False
 
     def initFish(self) -> bool:
         pass
@@ -91,6 +95,8 @@ class MyASGEGame(pyasge.ASGEGame):
         ``frame_time`` is essential to ensure consistent performance.
         @param game_time: The tick and frame deltas.
         """
+
+        self.data.renderer.render(self.data.background)
 
         if self.menu:
             # render the menu here
