@@ -66,7 +66,7 @@ class MyASGEGame(pyasge.ASGEGame):
         self.initFish()
 
         # Fish Speeds + Timer Space
-        self.speed = 350
+        self.speed = 400
 
         self.timer = None
         self.initTimer()
