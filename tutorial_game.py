@@ -51,6 +51,9 @@ class MyASGEGame(pyasge.ASGEGame):
         self.menu_text = None
         self.initMenu()
 
+        self.game_over = None
+        self.initGameOver()
+
         # Scoreboard Shenanigans
         self.scoreboard = None
         self.initScoreboard()
@@ -114,6 +117,29 @@ class MyASGEGame(pyasge.ASGEGame):
         self.exit_option.string = "Exit"
         self.exit_option.position = [500, 400]
         self.exit_option.colour = pyasge.COLOURS.LIGHTSLATEGRAY
+        return True
+
+    def initGameOver(self) -> bool:
+        self.data.fonts["MainFont"] = self.data.renderer.loadFont("data/fonts/KGHAPPY.ttf", 64)
+        self.game_over = pyasge.Text(self.data.fonts["MainFont"])
+        self.game_over.string = "Game Over!"
+        self.game_over.position = [100, 100]
+        self.game_over.colour = pyasge.COLOURS.DARKBLUE
+
+        self.your_score = pyasge.Text(self.data.fonts["MainFont"])
+        self.your_score.position = [100, 250]
+        self.your_score.scale = 0.75
+        self.your_score.colour = pyasge.COLOURS.DARKBLUE
+
+        self.play_again = pyasge.Text(self.data.fonts["MainFont"])
+        self.play_again.string = ">Replay"
+        self.play_again.position = [100, 400]
+        self.play_again.colour = pyasge.COLOURS.DARKBLUE
+
+        self.quit_game = pyasge.Text(self.data.fonts["MainFont"])
+        self.quit_game.string = "Exit"
+        self.quit_game.position = [500, 400]
+        self.quit_game.colour = pyasge.COLOURS.LIGHTSLATEGREY
         return True
 
     def clickHandler(self, event: pyasge.ClickEvent) -> None:
@@ -196,6 +222,15 @@ class MyASGEGame(pyasge.ASGEGame):
             self.data.renderer.render(self.fish)
             self.data.renderer.render(self.scoreboard)
             self.data.renderer.render(self.timer)
+
+
+        elif self.game_state == 2:
+            # render the Game Over
+            self.data.renderer.render(self.game_over)
+            self.data.renderer.render(self.your_score)
+            self.data.renderer.render(self.play_again)
+            self.data.renderer.render(self.quit_game)
+
 
 
 def main():
