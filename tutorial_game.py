@@ -101,7 +101,10 @@ class MyASGEGame(pyasge.ASGEGame):
         return True
 
     def clickHandler(self, event: pyasge.ClickEvent) -> None:
-        pass
+        if event.action == pyasge.MOUSE.BUTTON_PRESSED and event.button == pyasge.MOUSE.MOUSE_BTN1:
+            if isInside(self.fish, event.x, event.y):
+                self.data.score += 1
+                self.spawn()
 
     def keyHandler(self, event: pyasge.KeyEvent) -> None:
 
