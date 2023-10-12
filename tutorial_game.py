@@ -62,6 +62,10 @@ class MyASGEGame(pyasge.ASGEGame):
         # Fish Speeds + Timer Space
         self.speed = 350
 
+        self.timer = None
+        self.initTimer()
+        self.timerCountdown = 15
+
 
     def initBackground(self) -> bool:
         if self.data.background.loadTexture("Data/images/background.png"):
@@ -69,6 +73,12 @@ class MyASGEGame(pyasge.ASGEGame):
             return True
         else:
             return False
+
+    def initTimer(self) -> None:
+        self.timer = pyasge.Text(self.data.fonts["MainFont"])
+        self.timer.x = 15
+        self.timer.y = 75
+        self.timer.string = str(self.data.score).zfill(3)
 
     def initFish(self) -> bool:
         if self.fish.loadTexture("data/images/kenney_fishpack/fishtile_072.png"):
@@ -137,6 +147,7 @@ class MyASGEGame(pyasge.ASGEGame):
                     self.menu = False
                     self.game_state = 1
                     self.spawn()
+                    self.timerCountdown = 15
                 else:
                     self.signal_exit()
 
@@ -159,6 +170,11 @@ class MyASGEGame(pyasge.ASGEGame):
             if self.fish.x > self.data.game_res[0]:
                 self.fish.x = -self.fish.width
 
+            self.timerCountdown -= game_time.fixed_timestep
+            self.timer.string = str(int(self.timerCountdown)).zfill(3)
+            if int(self.timerCountdown) <= 0:
+                self.game_state = 2
+
     def render(self, game_time: pyasge.GameTime) -> None:
         """
         This is the variable time-step function. Use to update
@@ -179,6 +195,7 @@ class MyASGEGame(pyasge.ASGEGame):
             # Main Game Content
             self.data.renderer.render(self.fish)
             self.data.renderer.render(self.scoreboard)
+            self.data.renderer.render(self.timer)
 
 
 def main():
