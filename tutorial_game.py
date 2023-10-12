@@ -68,13 +68,54 @@ class MyASGEGame(pyasge.ASGEGame):
         pass
 
     def initMenu(self) -> bool:
-        pass
+        self.data.fonts["MainFont"] = self.data.renderer.loadFont("data/fonts/KGHAPPY.ttf", 64)
+        self.menu_text = pyasge.Text(self.data.fonts["MainFont"])
+        self.menu_text.string = "The Fish Game"
+        self.menu_text.position = [100, 100]
+        self.menu_text.colour = pyasge.COLOURS.DARKBLUE
+
+        # Play Option
+        self.play_option = pyasge.Text(self.data.fonts["MainFont"])
+        self.play_option.string = ">Start"
+        self.play_option.position = [100, 400]
+        self.play_option.colour = pyasge.COLOURS.DARKBLUE
+
+        # Exit Option
+        self.exit_option = pyasge.Text(self.data.fonts["MainFont"])
+        self.exit_option.string = "Exit"
+        self.exit_option.position = [500, 400]
+        self.exit_option.colour = pyasge.COLOURS.LIGHTSLATEGRAY
+        return True
 
     def clickHandler(self, event: pyasge.ClickEvent) -> None:
         pass
 
     def keyHandler(self, event: pyasge.KeyEvent) -> None:
-        pass
+
+        if event.action == pyasge.KEYS.KEY_PRESSED:
+
+            # main menu
+            if event.key == pyasge.KEYS.KEY_RIGHT or event.key == pyasge.KEYS.KEY_LEFT:
+                self.menu_option = 1 - self.menu_option
+                if self.menu_option == 0:
+                    self.play_option.string = ">Start"
+                    self.play_option.colour = pyasge.COLOURS.DARKBLUE
+                    self.exit_option.string = "Exit"
+                    self.exit_option.colour = pyasge.COLOURS.LIGHTSLATEGRAY
+
+                elif self.menu_option == 1:
+                    self.play_option.string = "Start"
+                    self.play_option.colour = pyasge.COLOURS.LIGHTSLATEGRAY
+                    self.exit_option.string = ">Exit"
+                    self.exit_option.colour = pyasge.COLOURS.DARKBLUE
+
+            if event.key == pyasge.KEYS.KEY_ENTER:
+                if self.menu_option == 0:
+                    self.menu = False
+                    self.game_state = 1
+                else:
+                    self.signal_exit()
+
 
     def spawn(self) -> None:
         pass
@@ -100,7 +141,9 @@ class MyASGEGame(pyasge.ASGEGame):
 
         if self.menu:
             # render the menu here
-            pass
+            self.data.renderer.render(self.menu_text)
+            self.data.renderer.render(self.play_option)
+            self.data.renderer.render(self.exit_option)
         else:
             # render the game here
             pass
